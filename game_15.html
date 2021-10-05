@@ -1,0 +1,230 @@
+<!Doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport">
+    <title>Пазл-15</title>
+    <style media="screen">
+        td {
+            background-color: #7f3cd0;
+            width: 120px;
+            height: 120px;
+            text-align: center;
+            font-size: 50px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: rgb(254, 255, 255);
+        }
+    </style>
+</head>
+
+
+<body>
+    <table id="table" border="1">
+    </table>
+    <script type="text/javascript">
+        var win = false;
+        const size = 4;
+        const value_of_empty_cell = " ";
+        let arr = new Array(size);
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                let t = i * size + j + 1;
+                if (t !== (size * size)) {
+                    arr[i][j] = t;
+                    console.log(arr[i][j]);
+                } else arr[i][j] = value_of_empty_cell;
+            }
+        }
+        for (let i = 0; i < size * size * size * size; i++) {
+            let min = 0;
+            let max = size;
+            let cell_1_i = Math.floor(Math.random() * (max - min)) + min;
+            let cell_1_j = Math.floor(Math.random() * (max - min)) + min;
+            let cell_2_i = Math.floor(Math.random() * (max - min)) + min;
+            let cell_2_j = Math.floor(Math.random() * (max - min)) + min;
+            while ((cell_1_i === cell_2_i) && (cell_1_i === cell_2_i)) {
+                cell_2_i = Math.floor(Math.random() * (max - min)) + min;
+                cell_2_j = Math.floor(Math.random() * (max - min)) + min;
+            }
+            let buf;
+            buf = arr[cell_1_i][cell_1_j];
+            arr[cell_1_i][cell_1_j] = arr[cell_2_i][cell_2_j];
+            arr[cell_2_i][cell_2_j] = buf;
+        }
+        /*arr[0][0] = 1;
+        arr[0][1] = 2;
+        arr[0][2] = 3;
+        arr[0][3] = 4;
+        arr[1][0] = 5;
+        arr[1][1] = 6;
+        arr[1][2] = 7;
+        arr[1][3] = 8;
+        arr[2][0] = 9;
+        arr[2][1] = 10;
+        arr[2][2] = 11;
+        arr[2][3] = 12;
+        arr[3][0] = 13;
+        arr[3][1] = 14;
+        arr[3][2] = value_of_empty_cell;
+        arr[3][3] = 15;*/
+
+        let sum = 0;
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (arr[i][j] !== value_of_empty_cell) {
+                    // для каждой клетки  перебираем все клетки после неё
+                    for (let t = j + 1; t < size; t++) { //проверяем все клетки, которые находятся в том же ряду справа
+                        if (arr[i][j] > arr[i][t] && arr[i][t] !== value_of_empty_cell) {
+                            sum++;
+                        }
+                    }
+                    for (let k = i + 1; k < size; k++) { //проверяем все клетки, которые находятся в рядах ниже
+                        for (let t = 0; t < size; t++) {
+                            if (arr[i][j] > arr[k][t] && arr[k][t] !== value_of_empty_cell) {
+                                sum++;
+                            }
+                        }
+                    }
+                } else {
+                    sum += i;
+                    sum++;
+                }
+            }
+        }
+        console.log(sum);
+        if (sum % 2 === 1) {
+            let arr2 = [
+                [],
+                [],
+                [],
+                []
+            ];
+            for (let i = 0; i < size; i++) { //поворачиваем матрицу на 90 градусов влево
+                for (let j = 0; j < size; j++) {
+                    arr2[i][j] = arr[j][i];
+                }
+            }
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    arr[i][j] = arr2[i][size - 1 - j];
+                }
+            }
+        }
+        sum = 0;
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (arr[i][j] !== value_of_empty_cell) { //для каждой клетки  перебираем все клетки после неё
+                    for (let t = j + 1; t < size; t++) { //проверяем все клетки, которые находятся в том же ряду справа
+                        if (arr[i][j] > arr[i][t] && arr[i][t] !== value_of_empty_cell) {
+                            sum++;
+                        }
+                    }
+                    for (let k = i + 1; k < size; k++) { //проверяем все клетки, которые находятся в рядах ниже
+                        for (let t = 0; t < size; t++) {
+                            if (arr[i][j] > arr[k][t] && arr[k][t] !== value_of_empty_cell) {
+                                sum++;
+                            }
+                        }
+                    }
+                } else {
+                    sum += i;
+                    sum++;
+                }
+            }
+        }
+
+        console.log(sum);
+
+        var table = document.getElementById("table");
+        //var table = document.getElementById("table");
+        for (let i = 0; i < size; i++) {
+            var row = document.createElement("tr");
+            table.append(row);
+            for (let j = 0; j < size; j++) {
+                if (arr[i][j] !== value_of_empty_cell) {
+                    var cell = document.createElement("td");
+                    row.append(cell);
+                    cell.appendChild(document.createTextNode(arr[i][j]));
+                } else {
+                    var y_empty_cell = i;
+                    var x_empty_cell = j;
+                    var cell = document.createElement("td");
+                    row.append(cell);
+                    table.rows[y_empty_cell].cells[x_empty_cell].style.background = '#FFF';
+                    document.createTextNode(value_of_empty_cell);
+
+                    //console.log(x_empty_cell + " x_empty_cell");
+
+
+                    //console.log(y_empty_cell + " y_empty_cell");
+                }
+                cell.onclick = function() {
+                    //console.log(this.parentNode);
+                    console.log(this.innerHTML);
+                    let y = this.parentElement.rowIndex; //номер строки текущего элемента
+                    //console.log(y + " y");
+                    let x = this.cellIndex; //номер столбца текущего элемента
+                    //console.log(x_empty_cell + " x_empty_cell");
+                    //console.log(y_empty_cell + " y_empty_cell");
+                    //console.log(x + " x");
+                    if (
+                        (x - 1 === x_empty_cell && y === y_empty_cell) ||
+                        (x + 1 === x_empty_cell && y === y_empty_cell) ||
+                        (x === x_empty_cell && y - 1 === y_empty_cell) ||
+                        (x === x_empty_cell && y + 1 === y_empty_cell)
+                    ) {
+                        arr[y_empty_cell][x_empty_cell] = arr[y][x]; //меняем местами значения в массиве
+                        arr[y][x] = value_of_empty_cell; //меняем местами значения в массиве
+                        table.rows[y].cells[x].style.background = '#FFF';
+                        table.rows[y].cells[x].innerHTML = value_of_empty_cell;
+                        table.rows[y_empty_cell].cells[x_empty_cell].style.background = '#7f3cd0';
+                        table.rows[y_empty_cell].cells[x_empty_cell].innerHTML = arr[y_empty_cell][x_empty_cell];
+                        //let buf = x_empty_cell;
+                        x_empty_cell = x;
+                        //x = buf;
+
+                        //buf = y_empty_cell;
+                        y_empty_cell = y;
+                        //y = buf;
+                        //this.style.background = '#FFF'; //оставить
+                        //table.rows[y].cells[x].style.background = '#0F0';
+                        //console.log(this.parentElement);
+                        //table.style.backgroundColor = '#55ff55';
+                        //table.row[i].cell[j].style.backgroundColor = '#55ff55';
+                        /* console.log("После swap");
+                         console.log(x + " x");
+                         console.log(y + " y");
+                         console.log(x_empty_cell + " x_empty_cell");
+                         console.log(y_empty_cell + " y_empty_cell");*/
+
+                        win = true;
+                        for (let k = 0; k < size; k++) {
+                            for (let t = 0; t < size; t++) {
+                                let z = k * size + t + 1;
+                                if (arr[k][t] !== z && (!(k === size - 1 && t === size - 1))) {
+                                    win = false;
+                                }
+                                if (k === (size - 1) && t === (size - 1) && arr[k][t] !== value_of_empty_cell) win = false; //если win было ложно
+                            }
+                        }
+                        arr[size - 1][size - 1]
+                        if (win === true) {
+                            console.log("win"); //выводим alert о победе
+                            alert("Поздравляю вас, вы победили!");
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+    </script>
+</body>
+
+</html>
+
+
+
+<!-- -->
